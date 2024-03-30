@@ -1,0 +1,26 @@
+{
+	"env": {
+		"commonjs": true,
+		"es2021": true,
+		"node": true
+	},
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": "latest"
+	},
+	"rules": {
+		"indent": ["error", 2],
+		"semi": ["error", "always"],
+		"no-unused-vars": "warn",
+		"no-undef": "error",
+		"no-undefined": "error",
+		"no-var": "error",
+		"prefer-const": "error",
+		"eqeqeq": "error",
+		"no-eval": "error",
+		"no-console": "warn",
+		"no-use-before-define": "error",
+		"no-unexpected-multiline": "error",
+		"no-await-in-loop": "error"
+	}
+}
