@@ -10,6 +10,9 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  rememberMe: {
+    type: Boolean,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

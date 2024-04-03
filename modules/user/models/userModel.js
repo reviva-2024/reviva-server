@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  rememberMe: {
+    type: Boolean,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

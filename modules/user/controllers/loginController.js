@@ -6,7 +6,7 @@ const { getAdminByData } = require("../services/adminService");
 
 const userLoginController = asyncHandler(async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, rememberMe } = req.body;
     const user = await getUserByData({ username });
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
@@ -15,7 +15,12 @@ const userLoginController = asyncHandler(async (req, res) => {
         success: false,
       });
     } else {
-      const accessToken = createTokens(user);
+      let accessToken;
+      if (rememberMe) {
+        accessToken = createTokens(user, rememberMe);
+      } else {
+        accessToken = createTokens(user);
+      }
 
       // Set the access-token in the authorization header
       res.setHeader("Authorization", `Bearer ${accessToken}`);
@@ -37,7 +42,7 @@ const userLoginController = asyncHandler(async (req, res) => {
 
 const adminLoginController = asyncHandler(async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, rememberMe } = req.body;
     const user = await getAdminByData({ username });
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
@@ -46,7 +51,12 @@ const adminLoginController = asyncHandler(async (req, res) => {
         success: false,
       });
     } else {
-      const accessToken = createTokens(user);
+      let accessToken;
+      if (rememberMe) {
+        accessToken = createTokens(user, rememberMe);
+      } else {
+        accessToken = createTokens(user);
+      }
 
       // Set the access-token in the authorization header
       res.setHeader("Authorization", `Bearer ${accessToken}`);
