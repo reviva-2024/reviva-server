@@ -12,7 +12,7 @@ const createUser = async (userData) => {
 
 const getUserByData = async (data) => {
   try {
-    const user = await User.findOne({ data });
+    const user = await User.findOne( data );
     if (!user) {
       throw new Error("User not found");
     }

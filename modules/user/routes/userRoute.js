@@ -10,7 +10,7 @@ const router = express.Router();
 //   checkLogin,
 //   userController.getProfileDataOfAllExistingUser
 // );
-router.get("/login", userLoginController);
+router.post("/login", userLoginController);
 router.post("/register", registerController);
 
 module.exports = router;

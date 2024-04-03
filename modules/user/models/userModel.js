@@ -11,13 +11,13 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  hashedPassword: {
+  password: {
     type: String,
     required: true,
   },
-  phone:{
-    type:Number,
-    required:true,
+  phone: {
+    type: Number,
+    required: true,
   },
   createdAt: {
     type: Date,
