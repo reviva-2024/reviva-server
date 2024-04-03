@@ -25,19 +25,19 @@ app.use(express.static("uploads"));
 //base routes
 app.use("/api/v0", baseRoutes);
 app.get("/", (req, res) => {
-  res.send(":)");
+  res.send("<h1>:)</h1>");
 });
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
+const connectDb = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
     // to check connection successful or not
     console.log("Connected to MongoDB");
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
+  } catch (error) {
+    console.log("Error While Connecting To MongoDb", error);
+  }
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
+};
+connectDb();
