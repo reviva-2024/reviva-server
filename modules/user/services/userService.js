@@ -1,4 +1,4 @@
-const User = require("./models/userModel");
+const User = require("../models/userModel");
 
 const createUser = async (userData) => {
   try {
@@ -12,7 +12,7 @@ const createUser = async (userData) => {
 
 const getUserByData = async (data) => {
   try {
-    const user = await User.findOne( data );
+    const user = await User.findOne(data);
     if (!user) {
       throw new Error("User not found");
     }
