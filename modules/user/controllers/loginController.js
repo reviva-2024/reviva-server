@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { getUserByData } = require("../userService");
 const bcrypt = require("bcrypt");
+const { createTokens } = require("../../../utils/authentication/createToken");
 
 const userLoginController = asyncHandler(async (req, res) => {
   try {
@@ -12,8 +13,18 @@ const userLoginController = asyncHandler(async (req, res) => {
         message: "Password Doesn't Matched Try Again",
         success: false,
       });
-    }else{
-      
+    } else {
+      const accessToken = createTokens(user);
+
+      // Set the access-token in the authorization header
+      res.setHeader("Authorization", `Bearer ${accessToken}`);
+
+      return res.status(200).json({
+        token: accessToken,
+        success: true,
+        data: user,
+        message: "User logged In successfully",
+      });
     }
   } catch (error) {
     res.status(400).json({
