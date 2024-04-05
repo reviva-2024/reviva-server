@@ -20,13 +20,21 @@ const createOtp = async (otpData) => {
     throw new Error("Error creating Otp: " + error.message);
   }
 };
+const deleteOpt = async (userData) => {
+  try {
+    const newOtp = await Otp.deleteMany(userData);
+    return newOtp;
+  } catch (error) {
+    throw new Error("Error creating Otp: " + error.message);
+  }
+};
 const findUserOtp = async (userData) => {
   try {
-    const user = await Otp.findOne(userData);
-    if (!user) {
+    const userOtp = await Otp.findOne(userData);
+    if (!userOtp) {
       throw new Error("UserOtp not found");
     }
-    return user;
+    return userOtp;
   } catch (error) {
     throw new Error("Error fetching user: " + error.message);
   }
@@ -44,10 +52,23 @@ const getUserByData = async (data) => {
   }
 };
 
-// const updateUser = async (userData) => {
-//   const { email,password:oldPassword } = userData;
-//   const user = await getUserByData(email);
-//   const passwordMatched = bcrypt
-// };
+const updateUser = async (email, userData) => {
+  try {
+    const user = await User.findOneAndUpdate( email, userData);
+    if (!user) {
+      throw new Error("Error While Updating User");
+    }
+    return user;
+  } catch (error) {
+    throw new Error("Error While Updating User: " + error.message);
+  }
+};
 
-module.exports = { createUser, getUserByData, createOtp,findUserOtp };
+module.exports = {
+  createUser,
+  getUserByData,
+  createOtp,
+  findUserOtp,
+  deleteOpt,
+  updateUser,
+};

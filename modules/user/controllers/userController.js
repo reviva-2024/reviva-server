@@ -1,6 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const nodemailer = require("nodemailer");
-const { createOtp, findUserOtp } = require("../services/userService");
+const {
+  createOtp,
+  findUserOtp,
+  deleteOpt,
+  getUserByData,
+  updateUser,
+} = require("../services/userService");
 const bcrypt = require("bcrypt");
 const Otp = require("../models/otpModel");
 
@@ -30,7 +36,7 @@ const sendOtpEmail = asyncHandler(async (req, res) => {
               <h3 style="font-weight: 600; color: #00b0e0; margin-top: 0;">REVIVA</h3>
             </div>
             <div style="margin-bottom: 10px;">
-              <p style="font-size: 16px; margin: 0;">Your OTP is: <span style="font-weight: bold; font-size: 24px; color: #333; text-align:center ">${otp}</span> It Will Expire In 3 Minutes</p>
+              <p style="font-size: 16px; margin: 0;">Your Password Change Verification Otp is: <span style="font-weight: bold; font-size: 24px; color: #333; text-align:center ">${otp}</span> It Will Expire In <strong style="color:"#FF0000">1 Hour</strong/></p>
             </div>
             <div style="text-align: center; margin-top: 50px; font-size: 12px;">
               <p>Powered by &copy; Reviva Ltd.</p>
@@ -49,7 +55,7 @@ const sendOtpEmail = asyncHandler(async (req, res) => {
           email,
           otp: hashedOtp,
           createdAt: Date.now(),
-          expiredAt: Date.now() + 180000, // Adjust expiry time here
+          expiredAt: Date.now() + 3600000, // Adjust expiry time here
         };
         const newOtp = await createOtp(otpData);
         res.status(200).json({
@@ -68,21 +74,36 @@ const sendOtpEmail = asyncHandler(async (req, res) => {
 });
 
 const verifyOtpAndUpdate = asyncHandler(async (req, res) => {
-  const { otp } = req.body;
+  const { otp, oldPassword, newPassword } = req.body;
   const { email } = req;
+  const user = await getUserByData({ email });
+  const passwordMatched = await bcrypt.compare(oldPassword, user.password);
+  if (!passwordMatched) {
+    return res
+      .status(401)
+      .json({ message: "Your Old Password Didn't Matched Try Again" });
+  }
   const userOtp = await findUserOtp({ email });
-
   // Compare hashed OTP
   const optMatched = await bcrypt.compare(otp, userOtp.otp);
-  console.log(optMatched,"otp");
+  if (!optMatched) {
+    return res
+      .status(401)
+      .json({ message: "Otp Didn't Matched Try Again", success: false });
+  }
   if (optMatched) {
     const otpExpiry = userOtp?.expiredAt > Date.now();
     if (!otpExpiry) {
-      // 
       res.status(401).json({ message: "Otp Has Been Expired", success: false });
+      return await deleteOpt({ email });
     } else {
-      // 
-      res.status(200).json({ message: "Otp Verified", success: true });
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      await updateUser({ email }, { password: hashedNewPassword });
+      res.status(200).json({
+        message: "Otp Verified And User Updated SuccessFully",
+        success: true,
+      });
+      return await deleteOpt({ email });
     }
   }
 });
