@@ -3,9 +3,10 @@ const { createUser } = require("../services/userService");
 const bcrypt = require("bcrypt");
 // const { createAdmin } = require("../services/adminService");
 
-const registerController = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   try {
     const { username, email, phone, password } = req.body;
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser({
       username,
@@ -50,4 +51,4 @@ const registerController = asyncHandler(async (req, res) => {
 //   }
 // });
 
-module.exports = { registerController };
+module.exports = { registerUser };

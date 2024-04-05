@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const { createTokens } = require("../../../utils/authentication/createToken");
 const { getAdminByData } = require("../services/adminService");
 
-const userLoginController = asyncHandler(async (req, res) => {
+const userLogin = asyncHandler(async (req, res) => {
   try {
     const { username, password, rememberMe } = req.body;
     const user = await getUserByData({ username });
@@ -40,7 +40,7 @@ const userLoginController = asyncHandler(async (req, res) => {
   }
 });
 
-const adminLoginController = asyncHandler(async (req, res) => {
+const adminLogin = asyncHandler(async (req, res) => {
   try {
     const { username, password, rememberMe } = req.body;
     const user = await getAdminByData({ username });
@@ -76,4 +76,4 @@ const adminLoginController = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { userLoginController, adminLoginController };
+module.exports = { userLogin, adminLogin };

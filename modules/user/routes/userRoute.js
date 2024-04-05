@@ -1,6 +1,11 @@
 const express = require("express");
-const { userLoginController } = require("../controllers/loginController");
-const { registerController } = require("../controllers/registerController");
+const { registerUser } = require("../controllers/registerController");
+const { userLogin } = require("../controllers/loginController");
+const {
+  sendOtpEmail,
+  verifyOtpAndUpdate,
+} = require("../controllers/userController");
+const { verifyUser } = require("../../../utils/authentication/verifyUser");
 const router = express.Router();
 // const userController = require("../../../controller/admin/user/userController");
 // const { checkLogin } = require("../../../middleware/token/checkLogin");
@@ -10,7 +15,9 @@ const router = express.Router();
 //   checkLogin,
 //   userController.getProfileDataOfAllExistingUser
 // );
-router.post("/login", userLoginController);
-router.post("/register", registerController);
-
+router.post("/login", userLogin);
+router.post("/register", registerUser);
+// router.put("/updateUser", updateUser);
+router.put("/sendOtpEmail", verifyUser, sendOtpEmail);
+router.put("/verifyOtp", verifyUser, verifyOtpAndUpdate);
 module.exports = router;
