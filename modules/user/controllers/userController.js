@@ -6,7 +6,11 @@ const {
   getUserByData,
   updateUser,
   sendOtpToEmail,
+  updateUserProfilePicture,
 } = require("../services/userService");
+const {
+  uploadOnCloudinary,
+} = require("../../../utils/authentication/cloudinary");
 
 const sendOtpEmail = asyncHandler(async (req, res) => {
   const { email } = req;
@@ -63,4 +67,26 @@ const verifyOtpAndUpdate = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { sendOtpEmail, verifyOtpAndUpdate };
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const { email } = req;
+  try {
+    const profilePicturePath = req.files.profilePicture[0].path;
+    console.log(profilePicturePath,"path");
+    const cloudinaryResponse = await uploadOnCloudinary(profilePicturePath);
+    console.log(cloudinaryResponse,"cloudinary response");
+    const profilePicture = cloudinaryResponse.secure_url;
+    const response = await updateUserProfilePicture({ email, profilePicture });
+    console.log(response,"update user res");
+    res
+      .status(200)
+      .json({ message: "Profile Picture Updated SuccessFully", success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error While Updating Profile Picture",
+      success: false,
+    });
+  }
+});
+
+module.exports = { sendOtpEmail, verifyOtpAndUpdate, updateUserAvatar };

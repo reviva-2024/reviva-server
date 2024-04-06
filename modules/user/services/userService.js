@@ -55,6 +55,19 @@ const getUserByData = async (data) => {
   }
 };
 
+const updateUserProfilePicture = async (data) => {
+  try {
+    const { profilePicture, email } = data;
+    const user = await User.findOneAndUpdate({ email }, { profilePicture });
+    if (!user) {
+      throw new Error("Error While Updating User");
+    }
+    return user;
+  } catch (error) {
+    throw new Error("Error While Updating User: " + error.message);
+  }
+};
+
 const updateUser = async (email, userData) => {
   try {
     const user = await User.findOneAndUpdate(email, userData);
@@ -133,4 +146,5 @@ module.exports = {
   deleteOpt,
   updateUser,
   sendOtpToEmail,
+  updateUserProfilePicture,
 };
