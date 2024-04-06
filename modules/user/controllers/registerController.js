@@ -1,12 +1,18 @@
 const asyncHandler = require("express-async-handler");
-const { createUser } = require("../services/userService");
+const { createUser, getUserByData } = require("../services/userService");
 const bcrypt = require("bcrypt");
 // const { createAdmin } = require("../services/adminService");
 
 const registerUser = asyncHandler(async (req, res) => {
   try {
     const { username, email, phone, password } = req.body;
-    
+    const isUserExist = await getUserByData({ $or: [{ email }, { phone }] });
+    if (isUserExist) {
+      return res.status(500).json({
+        message: "Email Or Phone Already Registered",
+        success: false,
+      });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser({
       username,

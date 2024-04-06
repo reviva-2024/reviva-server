@@ -50,7 +50,8 @@ const getUserByData = async (data) => {
     }
     return user;
   } catch (error) {
-    throw new Error("Error fetching user: " + error.message);
+    console.log(error, "From GetUser");
+    throw error;
   }
 };
 
@@ -131,5 +132,5 @@ module.exports = {
   findUserOtp,
   deleteOpt,
   updateUser,
-  sendOtpToEmail
+  sendOtpToEmail,
 };
