@@ -6,8 +6,8 @@ const { getAdminByData } = require("../services/adminService");
 
 const userLogin = asyncHandler(async (req, res) => {
   try {
-    const { username, password, rememberMe } = req.body;
-    const user = await getUserByData({ username });
+    const { email, password, rememberMe } = req.body;
+    const user = await getUserByData({ email });
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
       res.status(401).json({

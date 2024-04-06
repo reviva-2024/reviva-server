@@ -21,7 +21,7 @@ router.post("/login", userLogin);
 router.post("/register", registerUser);
 // router.put("/updateUser", updateUser);
 router.put("/sendOtpEmail", verifyUser, sendOtpEmail);
-router.put("/verifyOtp", verifyUser, verifyOtpAndUpdate);
+router.put("/verifyOtpAndUpdate", verifyUser, verifyOtpAndUpdate);
 router.put(
   "/updateProfilePicture",
   upload.fields([{ name: "profilePicture" }]),

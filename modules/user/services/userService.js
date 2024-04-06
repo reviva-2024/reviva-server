@@ -91,7 +91,6 @@ const sendOtpToEmail = async (email) => {
         pass: process.env.SENDER_PASSWORD,
       },
     });
-
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
     const messageOption = {
       from: process.env.SENDER_EMAIL,
@@ -138,6 +137,30 @@ const sendOtpToEmail = async (email) => {
   }
 };
 
+const verifyOtp = async (data) => {
+  const { email, otp } = data;
+  if (!email) {
+    throw new Error("Email Must Be Provided");
+  }
+  if (!otp) {
+    throw new Error("Otp Must Be Provided");
+  }
+  const userOtp = await findUserOtp({ email });
+  // Compare hashed OTP
+  try {
+    const optMatched = await bcrypt.compare(otp, userOtp.otp);
+    const otpExpiry = userOtp?.expiredAt > Date.now();
+    if (!otpExpiry) {
+      await deleteOpt({ email });
+      throw new Error("Otp Has Been Expired");
+    }
+    return optMatched;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error Matching Opt Error:", error.message);
+  }
+};
+
 module.exports = {
   createUser,
   getUserByData,
@@ -146,5 +169,6 @@ module.exports = {
   deleteOpt,
   updateUser,
   sendOtpToEmail,
+  verifyOtp,
   updateUserProfilePicture,
 };
