@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const {
-  findUserOtp,
   deleteOpt,
   getUserByData,
   updateUser,
@@ -18,7 +17,7 @@ const sendOtpEmail = asyncHandler(async (req, res) => {
   try {
     const otp = await sendOtpToEmail(email);
     res.status(200).json({
-      message: "Otp Send Successfully to Email",
+      message: "Otp Successfully Sended To Email",
       success: true,
       data: otp,
     });
@@ -63,12 +62,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const { email } = req;
   try {
     const profilePicturePath = req.files.profilePicture[0].path;
-    console.log(profilePicturePath, "path");
     const cloudinaryResponse = await uploadOnCloudinary(profilePicturePath);
-    console.log(cloudinaryResponse, "cloudinary response");
     const profilePicture = cloudinaryResponse.secure_url;
     const response = await updateUserProfilePicture({ email, profilePicture });
-    console.log(response, "update user res");
     res
       .status(200)
       .json({ message: "Profile Picture Updated SuccessFully", success: true });
@@ -83,17 +79,45 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
 const sendForgotEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  const user = await getUserByData({ email });
-  if (!user) {
-    return res.status(401).json({
-      message: "Invalid Email Address User Not Found",
-      success: false,
-    });
+  try {
+    const user = await getUserByData({ email });
+  } catch (error) {
+    if (error) {
+      return res.status(401).json({
+        message: "Invalid Email Address! User Not Found",
+        success: false,
+        error,
+      });
+    }
   }
   try {
     const sendOtp = await sendOtpToEmail(email);
+    return res.status(200).json({
+      message: "Otp Successfully Sended To Email",
+      success: true,
+    });
   } catch (error) {
     console.log(error);
+  }
+});
+
+const verifyOtpAndForgotPassword = asyncHandler(async (req, res) => {
+  const { otp, email, password } = req.body;
+  const user = await getUserByData({ email });
+  const optMatched = await verifyOtp({ email, otp });
+  if (!optMatched) {
+    return res
+      .status(401)
+      .json({ message: "Otp Didn't Matched Try Again", success: false });
+  }
+  if (optMatched) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await updateUser({ email }, { password: hashedPassword });
+    await deleteOpt({ email });
+    return res.status(200).json({
+      message: "Otp Verified And User Updated SuccessFully",
+      success: true,
+    });
   }
 });
 
@@ -102,4 +126,5 @@ module.exports = {
   verifyOtpAndUpdate,
   updateUserAvatar,
   sendForgotEmail,
+  verifyOtpAndForgotPassword,
 };
