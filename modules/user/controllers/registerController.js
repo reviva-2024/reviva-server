@@ -9,7 +9,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!email || !password || !username || !phone) {
       return res.status(400).json({
         message:
-          "Required information is missing. Please provide all necessary details to proceed",
+          "Oops! It looks like you forgot to provide some required information. Please provide all necessary Information to proceed.",
         success: false,
       });
     }

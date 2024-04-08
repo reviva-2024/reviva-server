@@ -8,12 +8,11 @@ const userLogin = asyncHandler(async (req, res) => {
   try {
     const { email, password, rememberMe } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({
-          message: "Required information is missing. Please provide all necessary details to proceed",
-          success: false,
-        });
+      return res.status(400).json({
+        message:
+          "Oops! It looks like you forgot to provide some required information. Please provide all necessary Information to proceed.",
+        success: false,
+      });
     }
     const user = await getUserByData({ email });
     const passwordMatched = await bcrypt.compare(password, user.password);
@@ -52,12 +51,11 @@ const adminLogin = asyncHandler(async (req, res) => {
   try {
     const { email, password, rememberMe } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({
-          message: "Required information is missing. Please provide all necessary details to proceed",
-          success: false,
-        });
+      return res.status(400).json({
+        message:
+          "Oops! It looks like you forgot to provide some required information. Please provide all necessary Information to proceed.",
+        success: false,
+      });
     }
 
     const user = await getAdminByData({ email });
