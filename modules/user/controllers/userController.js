@@ -14,6 +14,13 @@ const {
 
 const sendOtpEmail = asyncHandler(async (req, res) => {
   const { email } = req;
+  if (!email) {
+    return res.status(400).json({
+      message:
+        "Required information is missing. Please provide all necessary details to proceed",
+      success: false,
+    });
+  }
   try {
     const otp = await sendOtpToEmail(email);
     res.status(200).json({
@@ -31,8 +38,15 @@ const sendOtpEmail = asyncHandler(async (req, res) => {
 });
 
 const verifyOtpAndUpdate = asyncHandler(async (req, res) => {
-  const { otp, oldPassword, newPassword } = req.body;
   const { email } = req;
+  const { otp, oldPassword, newPassword } = req.body;
+  if (!otp || !oldPassword || !newPassword) {
+    return res.status(400).json({
+      message:
+        "Required information is missing. Please provide all necessary details to proceed",
+      success: false,
+    });
+  }
   const user = await getUserByData({ email });
   const passwordMatched = await bcrypt.compare(oldPassword, user.password);
   if (!passwordMatched) {
@@ -62,6 +76,13 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const { email } = req;
   try {
     const profilePicturePath = req.files.profilePicture[0].path;
+    if (!profilePicturePath) {
+      return res.status(400).json({
+        message:
+          "Required information is missing. Please provide all necessary details to proceed",
+        success: false,
+      });
+    }
     const cloudinaryResponse = await uploadOnCloudinary(profilePicturePath);
     const profilePicture = cloudinaryResponse.secure_url;
     const response = await updateUserProfilePicture({ email, profilePicture });
@@ -79,6 +100,13 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
 const sendForgotEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({
+      message:
+        "Required information is missing. Please provide all necessary details to proceed",
+      success: false,
+    });
+  }
   try {
     const user = await getUserByData({ email });
   } catch (error) {
@@ -103,6 +131,13 @@ const sendForgotEmail = asyncHandler(async (req, res) => {
 
 const verifyOtpAndForgotPassword = asyncHandler(async (req, res) => {
   const { otp, email, password } = req.body;
+  if (!email || !otp || !password) {
+    return res.status(400).json({
+      message:
+        "Required information is missing. Please provide all necessary details to proceed",
+      success: false,
+    });
+  }
   const user = await getUserByData({ email });
   const optMatched = await verifyOtp({ email, otp });
   if (!optMatched) {

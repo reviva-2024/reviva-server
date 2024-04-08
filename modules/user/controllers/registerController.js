@@ -6,6 +6,13 @@ const bcrypt = require("bcrypt");
 const registerUser = asyncHandler(async (req, res) => {
   try {
     const { username, email, phone, password } = req.body;
+    if (!email || !password || !username || !phone) {
+      return res.status(400).json({
+        message:
+          "Required information is missing. Please provide all necessary details to proceed",
+        success: false,
+      });
+    }
     try {
       const isUserExist = await getUserByData({ $or: [{ email }, { phone }] });
       if (isUserExist) {

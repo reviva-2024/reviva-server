@@ -7,6 +7,14 @@ const { getAdminByData } = require("../services/adminService");
 const userLogin = asyncHandler(async (req, res) => {
   try {
     const { email, password, rememberMe } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({
+          message: "Required information is missing. Please provide all necessary details to proceed",
+          success: false,
+        });
+    }
     const user = await getUserByData({ email });
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
@@ -42,8 +50,17 @@ const userLogin = asyncHandler(async (req, res) => {
 
 const adminLogin = asyncHandler(async (req, res) => {
   try {
-    const { username, password, rememberMe } = req.body;
-    const user = await getAdminByData({ username });
+    const { email, password, rememberMe } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({
+          message: "Required information is missing. Please provide all necessary details to proceed",
+          success: false,
+        });
+    }
+
+    const user = await getAdminByData({ email });
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
       res.status(401).json({
