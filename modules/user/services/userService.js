@@ -22,12 +22,12 @@ const createOtp = async (otpData) => {
     throw new Error("Error creating Otp: " + error.message);
   }
 };
-const deleteOpt = async (userData) => {
+const deleteOtp = async (userData) => {
   try {
     const newOtp = await Otp.deleteMany(userData);
     return newOtp;
   } catch (error) {
-    throw new Error("Error creating Otp: " + error.message);
+    throw new Error("Error Deleting Otp: " + error.message);
   }
 };
 const findUserOtp = async (userData) => {
@@ -151,7 +151,7 @@ const verifyOtp = async (data) => {
     const optMatched = await bcrypt.compare(otp, userOtp.otp);
     const otpExpiry = userOtp?.expiredAt > Date.now();
     if (!otpExpiry) {
-      await deleteOpt({ email });
+      await deleteOtp({ email });
       throw new Error("Otp Has Been Expired");
     }
     return optMatched;
@@ -166,7 +166,7 @@ module.exports = {
   getUserByData,
   createOtp,
   findUserOtp,
-  deleteOpt,
+  deleteOtp,
   updateUser,
   sendOtpToEmail,
   verifyOtp,

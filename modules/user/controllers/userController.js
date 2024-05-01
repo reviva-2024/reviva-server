@@ -1,12 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const {
-  deleteOpt,
   getUserByData,
   updateUser,
   sendOtpToEmail,
   updateUserProfilePicture,
   verifyOtp,
+  deleteOtp,
 } = require("../services/userService");
 const {
   uploadOnCloudinary,
@@ -55,7 +55,6 @@ const verifyOtpAndUpdate = asyncHandler(async (req, res) => {
       .json({ message: "Your Old Password Didn't Matched Try Again" });
   }
   const optMatched = await verifyOtp({ email, otp });
-  console.log(optMatched);
   if (!optMatched) {
     return res
       .status(401)
@@ -64,7 +63,7 @@ const verifyOtpAndUpdate = asyncHandler(async (req, res) => {
   if (optMatched) {
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     await updateUser({ email }, { password: hashedNewPassword });
-    await deleteOpt({ email });
+    await deleteOtp({ email });
     return res.status(200).json({
       message: "Otp Verified And User Updated SuccessFully",
       success: true,
@@ -148,7 +147,7 @@ const verifyOtpAndForgotPassword = asyncHandler(async (req, res) => {
   if (optMatched) {
     const hashedPassword = await bcrypt.hash(password, 10);
     await updateUser({ email }, { password: hashedPassword });
-    await deleteOpt({ email });
+    await deleteOtp({ email });
     return res.status(200).json({
       message: "Otp Verified And User Updated SuccessFully",
       success: true,
