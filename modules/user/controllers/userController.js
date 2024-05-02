@@ -10,7 +10,7 @@ const {
 } = require("../services/userService");
 const {
   uploadOnCloudinary,
-} = require("../../../utils/authentication/cloudinary");
+} = require("../../../Config/cloudinary");
 
 const sendOtpEmail = asyncHandler(async (req, res) => {
   const { email } = req;
