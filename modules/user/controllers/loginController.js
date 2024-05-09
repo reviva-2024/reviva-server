@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const { getUserByData } = require("../services/userService");
 const bcrypt = require("bcrypt");
-const { createTokens } = require("../../../utils/authentication/createToken");
 const { getAdminByData } = require("../services/adminService");
+const { createTokens } = require("../utils/authentication/createToken");
 
 const userLogin = asyncHandler(async (req, res) => {
   try {
