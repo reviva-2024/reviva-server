@@ -136,7 +136,6 @@ const verifyOtpAndForgotPassword = asyncHandler(async (req, res) => {
       success: false,
     });
   }
-  const user = await getUserByData({ email });
   const optMatched = await verifyOtp({ email, otp });
   if (!optMatched) {
     return res

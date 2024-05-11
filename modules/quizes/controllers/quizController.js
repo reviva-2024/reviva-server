@@ -4,15 +4,11 @@ const Quiz = require("../models/quizModel");
 const addQuiz = expressAsyncHandler(async (req, res) => {
   try {
     const data = req.body;
-
-    // Create an array of option objects
-
     // Create a new quiz document
     const newQuiz = new Quiz(data);
 
     // Save the new quiz document to the database
     const savedQuiz = await newQuiz.save();
-
     res
       .status(201)
       .send({ message: "Question added successfully", quiz: savedQuiz });
