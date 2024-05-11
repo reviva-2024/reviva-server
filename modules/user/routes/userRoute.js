@@ -7,6 +7,7 @@ const {
   updateUserAvatar,
   sendForgotEmail,
   verifyOtpAndForgotPassword,
+  updateQuizMark,
 } = require("../controllers/userController");
 const { verifyUser } = require("../../../common/middlewares/verifyUser");
 const upload = require("../../../common/middlewares/multer");
@@ -32,4 +33,5 @@ router.put(
   verifyUser,
   updateUserAvatar
 );
+router.put("/updateQuizMark", verifyUser, updateQuizMark);
 module.exports = router;

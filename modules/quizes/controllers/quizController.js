@@ -3,13 +3,12 @@ const Quiz = require("../models/quizModel");
 
 const addQuiz = expressAsyncHandler(async (req, res) => {
   try {
-    const { question, options } = req.body;
+    const data = req.body;
 
     // Create an array of option objects
-    const optionArray = options.map(({ text, mark }) => ({ text, mark }));
 
     // Create a new quiz document
-    const newQuiz = new Quiz({ question, options: optionArray });
+    const newQuiz = new Quiz(data);
 
     // Save the new quiz document to the database
     const savedQuiz = await newQuiz.save();
@@ -26,9 +25,11 @@ const addQuiz = expressAsyncHandler(async (req, res) => {
 const getQuiz = expressAsyncHandler(async (req, res) => {
   try {
     const quiz = await Quiz.find();
-    res
-      .status(200)
-      .json({ message: "Quiezes Fetched Successfully", success: true, quiz });
+    res.status(200).json({
+      message: "Quizes Fetched Successfully",
+      success: true,
+      data: quiz,
+    });
   } catch (err) {
     res
       .status(500)

@@ -8,9 +8,8 @@ const {
   verifyOtp,
   deleteOtp,
 } = require("../services/userService");
-const {
-  uploadOnCloudinary,
-} = require("../../../Config/cloudinary");
+const { uploadOnCloudinary } = require("../../../Config/cloudinary");
+const expressAsyncHandler = require("express-async-handler");
 
 const sendOtpEmail = asyncHandler(async (req, res) => {
   const { email } = req;
@@ -155,8 +154,34 @@ const verifyOtpAndForgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
+const updateQuizMark = expressAsyncHandler(async (req, res) => {
+  try {
+    const { quizMark } = req.body;
+    const { email } = req;
+    const result = await updateUser(
+      { email },
+      {
+        quizMark,
+        isQuizAttended: true,
+      }
+    );
+    res.status(200).json({
+      message: "User Quiz Mark Updated Successfully",
+      success: true,
+      result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error Updating User Quiz Mark",
+      success: false,
+      error,
+    });
+  }
+});
+
 module.exports = {
   sendOtpEmail,
+  updateQuizMark,
   verifyOtpAndUpdate,
   updateUserAvatar,
   sendForgotEmail,
