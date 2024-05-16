@@ -5,10 +5,8 @@ const getCourse = async (data) => {
     let course;
     if (data) {
       course = await Course.findOne(data);
-      console.log(course);
     } else {
       course = await Course.find();
-      console.log(course);
     }
     if (!course) {
       throw new Error("Course Not Found");
