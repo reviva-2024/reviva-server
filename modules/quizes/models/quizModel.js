@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 
 const quizSchema = new mongoose.Schema({
   question: String,
+  markingCriteria: String,
   options: [
-    { a: String, mark: Number },
-    { b: String, mark: Number },
-    { c: String, mark: Number },
-    { d: String, mark: Number }
-  ]
+    { label: String, mark: Number, option: String },
+    { label: String, mark: Number, option: String },
+    { label: String, mark: Number, option: String },
+    { label: String, mark: Number, option: String },
+  ],
 });
 
 const Quiz = mongoose.model("Quiz", quizSchema);
