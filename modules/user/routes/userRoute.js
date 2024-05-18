@@ -8,6 +8,7 @@ const {
   sendForgotEmail,
   verifyOtpAndForgotPassword,
   updateQuizMark,
+  updateUserInfo,
 } = require("../controllers/userController");
 const { verifyUser } = require("../../../common/middlewares/verifyUser");
 const upload = require("../../../common/middlewares/multer");
@@ -19,6 +20,7 @@ router.post("/register", registerUser);
 router.put("/sendOtpEmail", verifyUser, sendOtpEmail);
 router.put("/verifyOtpAndUpdate", verifyUser, verifyOtpAndUpdate);
 router.put("/sendForgotEmail", sendForgotEmail);
+router.put("/updateUserInfo",verifyUser, updateUserInfo);
 router.put("/verifyOtpAndForgotPassword", verifyOtpAndForgotPassword);
 router.put(
   "/updateProfilePicture",
