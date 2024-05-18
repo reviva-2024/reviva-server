@@ -70,6 +70,23 @@ const verifyOtpAndUpdate = asyncHandler(async (req, res) => {
   }
 });
 
+const updateUserInfo = expressAsyncHandler(async (req, res) => {
+  try {
+    const { phone, username } = req.body;
+    const { email } = req;
+    const result = await updateUser({ email }, { phone, username });
+    return res.status(200).json({
+      message: "UserInfo Updated Successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Something Went Wrong",
+      success: false,
+    });
+  }
+});
+
 const updateUserAvatar = asyncHandler(async (req, res) => {
   const { email } = req;
   try {
@@ -184,5 +201,6 @@ module.exports = {
   verifyOtpAndUpdate,
   updateUserAvatar,
   sendForgotEmail,
+  updateUserInfo,
   verifyOtpAndForgotPassword,
 };
