@@ -58,7 +58,11 @@ const getUserByData = async (data) => {
 const updateUserProfilePicture = async (data) => {
   try {
     const { profilePicture, email } = data;
-    const user = await User.findOneAndUpdate({ email }, { profilePicture });
+    const user = await User.findOneAndUpdate(
+      { email },
+      { profilePicture },
+      { new: true }
+    );
     if (!user) {
       throw new Error("Error While Updating User");
     }
