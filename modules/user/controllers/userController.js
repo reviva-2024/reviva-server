@@ -77,9 +77,11 @@ const updateUserInfo = expressAsyncHandler(async (req, res) => {
     const { phone, username } = req.body;
     const { email } = req;
     const result = await updateUser({ email }, { phone, username });
+
     return res.status(200).json({
       message: "UserInfo Updated Successfully",
       success: true,
+      data: result,
     });
   } catch (error) {
     return res.status(400).json({
@@ -91,6 +93,7 @@ const updateUserInfo = expressAsyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
   const { email } = req;
+
   try {
     const profilePicturePath = req.files.profilePicture[0].path;
     if (!profilePicturePath) {
@@ -103,9 +106,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const cloudinaryResponse = await uploadOnCloudinary(profilePicturePath);
     const profilePicture = cloudinaryResponse.secure_url;
     const response = await updateUserProfilePicture({ email, profilePicture });
-    res
-      .status(200)
-      .json({ message: "Profile Picture Updated SuccessFully", success: true });
+    console.log("response", response);
+    res.status(200).json({
+      message: "Profile Picture Updated SuccessFully",
+      success: true,
+      data: response,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
