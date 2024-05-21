@@ -21,11 +21,13 @@ const sendOtpEmail = asyncHandler(async (req, res) => {
     });
   }
   try {
-    const otp = await sendOtpToEmail(email);
+    const userOtp = await deleteOtp({ email });
+    if (userOtp) {
+      await sendOtpToEmail(email);
+    }
     res.status(200).json({
       message: "Otp Successfully Sended To Email",
       success: true,
-      data: otp,
     });
   } catch (error) {
     res.status(500).json({
@@ -123,7 +125,7 @@ const sendForgotEmail = asyncHandler(async (req, res) => {
     });
   }
   try {
-    const user = await getUserByData({ email });
+    await getUserByData({ email });
   } catch (error) {
     if (error) {
       return res.status(401).json({
@@ -134,7 +136,10 @@ const sendForgotEmail = asyncHandler(async (req, res) => {
     }
   }
   try {
-    const sendOtp = await sendOtpToEmail(email);
+    const deleteOtp2 = await deleteOtp({ email });
+    if (deleteOtp2) {
+      await sendOtpToEmail(email);
+    }
     return res.status(200).json({
       message: "Otp Successfully Sended To Email",
       success: true,
@@ -179,7 +184,7 @@ const updateQuizMark = expressAsyncHandler(async (req, res) => {
       {
         quizMark,
         isQuizAttended: true,
-      }
+      },
     );
     res.status(200).json({
       message: "User Quiz Mark Updated Successfully",
